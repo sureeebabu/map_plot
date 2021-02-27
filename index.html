@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>Road Map</title>
+</head>
+
+<body>
+
+
+    <div class="container pt-5">
+        <div class="row">
+            <div class="col-6 col-lg-3 text-center">
+                <input type="date" id="fromDate" class="form-control btn-sm" placeholder="Choose From Date">
+            </div>
+            <div class="col-6 col-lg-3 text-center">
+                <input type="date" id="toDate" class="form-control btn-sm" placeholder="Choose To Date">
+            </div>
+            <div class="col-12 col-lg-3 text-center pt-2">
+                <input type="button" value="Submit" id="btn" class="btn btn-primary btn-sm">
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col-8">
+                <div id="map"></div>
+            </div>
+        </div> -->
+    </div>
+    <div class="text-center pt-5">
+        <div class="spinner-border" id="spinner" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+
+    <script src="js/jquery-2.2.3.min.js" type="text/javascript"></script>
+    <!-- <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCMLN-ZbmFDw7Rf_OLsCDrYzI4n-jcaX0&callback=initMap&libraries=&v=weekly"
+    async ></script> -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCMLN-ZbmFDw7Rf_OLsCDrYzI4n-jcaX0&libraries=&v=weekly"
+        async></script>
+
+
+    <script>
+        var xhr = new XMLHttpRequest();
+        var finalArr;
+        $(document).ready(function () {
+            // getTimeline();
+            $('#spinner').hide();
+            $('#btn').click(function () {
+                $('#spinner').show();
+                const fromDate = $('#fromDate').val();
+                const toDate = $('#toDate').val();
+                // console.log(fromDate);
+                // console.log(toDate);
+                getTimeline(fromDate, toDate);
+            });
+        });
+
+        function getTimeline(fromDatee, toDatee) {
+            var form = new FormData();
+            form.append("userID", "21");
+            form.append("fromDate", fromDatee);
+            form.append("toDate", toDatee);
+            form.append("gpsDate", toDatee);
+
+            var settings = {
+                "url": "https://www.plumtekerp.in/app-api/usergpsTracking_api.php",
+                "method": "POST",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+                "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+                // console.log(response);
+                const dataJSON = JSON.parse(response);
+                $('#spinner').hide();
+                // console.log(dataJSON);
+                finalArr = removeDuplicates(dataJSON.userLog, 'latitude');
+
+                let tempArray = [];
+
+                for (let i = 0; i <= finalArr.length - 1; i++) {
+                    tempArray.push({
+                        lat: parseFloat(finalArr[i].latitude),
+                        lng: parseFloat(finalArr[i].longitude),
+                    });
+                }
+
+
+                console.log(JSON.stringify(tempArray, null, '\t'));
+
+
+                const map = new google.maps.Map(document.getElementById("map"), {
+                    zoom: 11,
+                    center: { lat: tempArray[0].lat, lng: tempArray[0].lng },
+                    // mapTypeId: "terrain",
+                    mapTypeId: "roadmap",
+                });
+
+                for (let j = 0; j <= tempArray.length - 1; j++) {
+                    new google.maps.Marker({
+                        position: { lat: tempArray[j].lat, lng: tempArray[j].lng },
+                        map,
+                        title: "Hello World!",
+                    });
+                }
+
+                // var lineSymbol = {
+                //     path: "M 0,-1 0,1",
+                //     strokeOpacity: 1,
+                //     scale: 4,
+                // };
+                const flightPlanCoordinates = tempArray;
+                const flightPath = new google.maps.Polyline({
+                    path: flightPlanCoordinates,
+                    geodesic: true,
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2,
+                    // icons: [
+                    //     {
+                    //         icon: lineSymbol,
+                    //         offset: "0",
+                    //         repeat: "20px",
+                    //     },
+                    // ],
+                });
+                flightPath.setMap(map);
+
+
+
+                // console.log(finalArr);
+                // console.log(JSON.stringify(finalArr.slice(0, 5), null,'\t'));
+
+            });
+
+
+
+        }
+
+        function removeDuplicates(myArr, prop) {
+            return myArr.filter((obj, pos, arr) => {
+                return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+            });
+        }
+
+    </script>
+</body>
+
+</html>

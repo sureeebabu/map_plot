@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Polylines</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- jsFiddle will insert css and js -->
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+        #map {
+            height: 75%;
+            width: 75%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container pt-2 pb-2">
+        <div class="row">
+            <div class="col-6 col-lg-3 text-center">
+                <input type="date" id="fromDate" class="form-control btn-sm" placeholder="Choose From Date">
+            </div>
+            <div class="col-6 col-lg-3 text-center">
+                <input type="date" id="toDate" class="form-control btn-sm" placeholder="Choose To Date">
+            </div>
+            <div class="col-12 col-lg-3 text-center pt-2">
+                <input type="button" value="Submit" id="btn" class="btn btn-primary btn-sm">
+            </div>
+        </div>
+    </div>
+
+   <div id="map"></div>
+
+
+
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly"
+        async></script>
+    <!-- <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCMLN-ZbmFDw7Rf_OLsCDrYzI4n-jcaX0&callback=initMap&libraries=&v=weekly"
+        async></script> -->
+    <script>
+        function initMap() {
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 11,
+                center: { lat: 13.0529025, lng: 80.1546015 },
+                // mapTypeId: "terrain",
+                mapTypeId: "roadmap",
+            });
+            const flightPlanCoordinates = [
+                {
+                    lat: 13.0529025,
+                    lng: 80.1546015
+                },
+                {
+                    lat: 13.0529035,
+                    lng: 80.1546014
+                },
+                {
+                    lat: 13.0529045,
+                    lng: 80.1546007
+                },
+                {
+                    lat: 12.9517607,
+                    lng: 80.2465421
+                },
+                {
+                    lat: 12.9517373,
+                    lng: 80.2465362
+                },
+                {
+                    lat: 12.9518609,
+                    lng: 80.2465482
+                },
+                {
+                    lat: 12.9517364,
+                    lng: 80.2465424
+                },
+                {
+                    lat: 12.9517431,
+                    lng: 80.2465501
+                },
+                {
+                    lat: 12.951769,
+                    lng: 80.2465506
+                },
+                {
+                    lat: 12.9517412,
+                    lng: 80.2465424
+                },
+                {
+                    lat: 12.9517612,
+                    lng: 80.2465382
+                },
+                {
+                    lat: 12.9517332,
+                    lng: 80.2465413
+                },
+                {
+                    lat: 12.9517356,
+                    lng: 80.2465419
+                },
+                {
+                    lat: 12.9517474,
+                    lng: 80.2465445
+                },
+                {
+                    lat: 12.9517494,
+                    lng: 80.2465424
+                },
+                {
+                    lat: 12.9517429,
+                    lng: 80.246544
+                },
+                {
+                    lat: 12.9517426,
+                    lng: 80.246544
+                },
+                {
+                    lat: 12.9517625,
+                    lng: 80.2465425
+                },
+                {
+                    lat: 12.9517558,
+                    lng: 80.2465485
+                },
+                {
+                    lat: 12.9517263,
+                    lng: 80.246547
+                },
+                {
+                    lat: 12.9517313,
+                    lng: 80.2465484
+                },
+                {
+                    lat: 12.9517486,
+                    lng: 80.2465431
+                },
+                {
+                    lat: 12.9517513,
+                    lng: 80.2465427
+                },
+                {
+                    lat: 12.951742,
+                    lng: 80.246549
+                },
+                {
+                    lat: 12.95174,
+                    lng: 80.2465376
+                },
+                {
+                    lat: 12.9517367,
+                    lng: 80.2465381
+                },
+                {
+                    lat: 12.951744,
+                    lng: 80.2465418
+                },
+                {
+                    lat: 12.9517882,
+                    lng: 80.2465447
+                },
+                {
+                    lat: 12.9517354,
+                    lng: 80.2465378
+                },
+                {
+                    lat: 12.9518051,
+                    lng: 80.246543
+                },
+                {
+                    lat: 12.9517394,
+                    lng: 80.2465432
+                },
+                {
+                    lat: 12.9517589,
+                    lng: 80.2465481
+                },
+                {
+                    lat: 12.9517458,
+                    lng: 80.2465395
+                },
+                {
+                    lat: 12.9837538,
+                    lng: 80.2400453
+                },
+                {
+                    lat: 12.9559828,
+                    lng: 80.1870078
+                },
+                {
+                    lat: 12.9361792,
+                    lng: 80.2046409
+                },
+                {
+                    lat: 12.9361784,
+                    lng: 80.2046401
+                },
+                {
+                    lat: 12.9517348,
+                    lng: 80.2465434
+                },
+                {
+                    lat: 12.9517325,
+                    lng: 80.2465374
+                },
+                {
+                    lat: 12.9517411,
+                    lng: 80.2465336
+                },
+                {
+                    lat: 12.9517225,
+                    lng: 80.2465374
+                },
+                {
+                    lat: 13.0375398,
+                    lng: 80.1725226
+                },
+                {
+                    lat: 13.037543,
+                    lng: 80.172528
+                },
+                {
+                    lat: 13.0375414,
+                    lng: 80.1725216
+                },
+                {
+                    lat: 12.9362132,
+                    lng: 80.2046674
+                }
+            ];
+            const flightPath = new google.maps.Polyline({
+                path: flightPlanCoordinates,
+                geodesic: true,
+                strokeColor: "#FF0000",
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+                optimizeWaypoints: true,
+            });
+            flightPath.setMap(map);
+        }
+    </script>
+</body>
+
+</html>
